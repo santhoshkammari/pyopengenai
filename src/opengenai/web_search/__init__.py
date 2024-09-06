@@ -7,4 +7,3 @@ from .agent import WebSearchAgent,WebSearchArguments
 __all__ = ['fast_embedding_search', 'WebSearchAgent', 'FastHTMLParserV3', 'WebSearchArguments',
            'OptimizedMultiQuerySearcher']
 
-
