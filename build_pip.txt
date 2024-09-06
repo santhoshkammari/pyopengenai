@@ -1,0 +1,17 @@
+rm -r dist/
+python -m build
+pip uninstall opengenai
+pip install dist/opengenai-0.1.2-py3-none-any.whl
+scp dist/opengenai-0.1.2-py3-none-any.whl gpuadmin@192.168.162.49:/home/gpuadmin/santhosh/playground
+
+============================
+webdriver install:
+============================
+wget https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_128.0.6613.84-1_amd64.deb
+sudo dpkg -i google-chrome-stable_128.0.6613.84-1_amd64.deb
+wget https://storage.googleapis.com/chrome-for-testing-public/128.0.6613.0/linux64/chromedriver-linux64.zip
+unzip chromedriver-linux64.zip
+chmod +x chromedriver-linux64/chromedriver
+sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
+chromedriver --version
+google-chrome --version

@@ -1,0 +1,15 @@
+Metadata-Version: 2.1
+Name: opengenai
+Version: 0.1.2
+Summary: A powerful web content fetcher and processor
+Home-page: https://github.com/yourusername/opengenai
+Author: Kammari Santhosh
+Author-email: Your Name <your.email@example.com>
+Project-URL: Homepage, https://github.com/yourusername/opengenai
+Project-URL: Bug Tracker, https://github.com/yourusername/opengenai/issues
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
