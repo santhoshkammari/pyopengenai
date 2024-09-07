@@ -13,7 +13,6 @@ import markdown
 from langchain.prompts import PromptTemplate
 from langchain_ollama import ChatOllama
 from langchain.schema import StrOutputParser
-from .search_tool import WebFetcher
 from .optimized_multi_query_searcher import OptimizedMultiQuerySearcher
 
 # Set up logging
@@ -207,11 +206,10 @@ Format each query directly as a separate line, each string being a refined searc
 
 class WebSearchAgent:
     def __init__(self,query_refining_prompt=None):
-        self.web_fetcher = WebFetcher()
+        self.web_fetcher = None
         self.query_refining_prompt = query_refining_prompt
 
     def refine_queries(self, user_query: str, num_queries: int,llm) -> List[str]:
-        logger.info("Refining queries")
         if self.query_refining_prompt is None:
             self.query_refining_prompt = WebSearchAgentPersonas.get_query_refining_prompt(num_queries=num_queries)
             # self.query_refining_prompt = self.get_query_refining_prompt()
@@ -279,8 +277,12 @@ class WebSearchAgent:
             extract_url_content=False,
             return_markdown_text = True,
             return_json = False
-    , return_pdf=False, max_workers=None) -> Union[Dict,str,bytes]:
+    , return_pdf=False,
+            return_only_urls  = False,
+            max_workers=None) -> Union[Dict,str,bytes]:
         logger.info(f"Starting web search agent for query: {user_query}")
+        if num_queries is not None and llm is None:
+            raise ValueError("If num_queries is provided, llm should be provided as well.")
         if summarize is True:
             extract_url_content = True
         if num_queries is not None:
@@ -292,7 +294,11 @@ class WebSearchAgent:
         gs = OptimizedMultiQuerySearcher(chromedriver_path=chromedriver_path,
                                          max_workers=max_workers)
         all_urls = await gs.search_multiple_queries(refined_queries, search_provider=search_provider)
-        filtered_urls = [each_url for url in all_urls for each_url in url.urls if len(each_url)>0]
+        # filtered_urls = [each_url for url in all_urls for each_url in url.urls if len(each_url)>0]
+        all_urls = [url.urls for url in all_urls]
+        filtered_urls = [y for x in zip(*all_urls) for y in x]
+        if return_only_urls:
+            return filtered_urls
         # res = await WebFetcher.get_url_content(filtered_urls)
         if extract_url_content:
             from opengenai.web_search.html_parser import FastHTMLParserV3
@@ -381,16 +387,16 @@ class WebSearchArguments(BaseModel):
 
 # Example usage
 if __name__ == "__main__":
-    llm = ChatOllama(model="gemma2:2b")
+    # llm = ChatOllama(model="gemma2:2b")
     from opengenai.langchain_ollama.ollama import CustomChatOllama
-    # llm  = CustomChatOllama(
-    #     model = "gemma2:2b",
-    #     base_url = "http://192.168.162.49:8888"
-    # )
+    llm  = CustomChatOllama(
+        model = "gemma2:2b",
+        base_url = "http://192.168.162.49:8888"
+    )
     agent = WebSearchAgent()
     args = WebSearchArguments(
         user_query="i want to know the latest agentic RAG based approaches",
-        # num_queries=5,
+        num_queries=3,
         query_with_date=False,
     )
     result = asyncio.run(agent.arun(**args.model_dump()))

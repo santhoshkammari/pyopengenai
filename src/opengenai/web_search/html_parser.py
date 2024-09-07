@@ -68,7 +68,7 @@ class FastHTMLParserV2:
                 else:
                     return ""
         except Exception as e:
-            print(f"Error fetching {url}: {str(e)}")
+            # print(f"Error fetching {url}: {str(e)}")
             return ""
 
     def _process_html(self, html):
@@ -155,7 +155,7 @@ class FastHTMLParserV3:
                     # return self._process_html(html)
                     return self._process_trafili_html(html)
                 else:
-                    print(f"Error fetching {url}: HTTP status {response.status}")
+                    # print(f"Error fetching {url}: HTTP status {response.status}")
                     return ""
         except aiohttp.ClientConnectorError as e:
             print(f"Connection error for {url}: {str(e)}")

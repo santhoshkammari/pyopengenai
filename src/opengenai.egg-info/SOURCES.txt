@@ -12,6 +12,8 @@ src/opengenai/langchain_ollama/ollama.py
 src/opengenai/langchain_ollama/server.py
 src/opengenai/web_search/__init__.py
 src/opengenai/web_search/agent.py
+src/opengenai/web_search/crewai_web_serach_qa.py
+src/opengenai/web_search/crewai_web_serach_qa_backup.py
 src/opengenai/web_search/embed_search.py
 src/opengenai/web_search/html_parser.py
 src/opengenai/web_search/optimized_multi_query_searcher.py

@@ -28,8 +28,8 @@ class OptimizedMultiQuerySearcher:
         self.max_workers = max_workers or min(32, cpu_count() -2)
         self.driver_pool = []
         self.params = {
-            "google":{"search":"search","find_element":"div.g","head_selector":"h3"},
-            "bing":{"search":"b_results","find_element":".b_algo","head_selector":"h2"}
+            "bing":{"search":"b_results","find_element":".b_algo","head_selector":"h2"},
+            "google": {"search": "search", "find_element": "div.g", "head_selector": "h3"}
         }
 
     def _setup_driver(self):
@@ -52,6 +52,16 @@ class OptimizedMultiQuerySearcher:
 
     def _return_driver(self, driver):
         self.driver_pool.append(driver)
+
+    def cleanup(self):
+        if hasattr(self, 'driver'):
+            self.driver.quit()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.cleanup()
 
     def search_single_query(self, query, num_results=10,
                             search_provider="google"
@@ -112,7 +122,7 @@ class OptimizedMultiQuerySearcher:
             self._return_driver(driver)
 
     async def search_multiple_queries(self, queries: List[str], num_results=10,
-                                      search_provider=None
+                                      search_provider=None,return_only_urls = False
                                       ) -> List[SearchResult]:
         loop = asyncio.get_event_loop()
         with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
@@ -127,7 +137,12 @@ class OptimizedMultiQuerySearcher:
                 )
                 for query in queries for provider in providers_list
             ]
-            return await asyncio.gather(*tasks)
+            result = await asyncio.gather(*tasks)
+            if return_only_urls:
+                all_urls = [url.urls for url in result]
+                filtered_urls = [y for x in zip(*all_urls) for y in x]
+                return filtered_urls
+            return result
 
     def __del__(self):
         for driver in self.driver_pool:
