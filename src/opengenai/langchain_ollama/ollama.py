@@ -13,6 +13,7 @@ class CustomChatOllama(BaseChatModel):
     model: str
     base_url: str
     temperature: float = 0.0
+    num_predict=-1
 
     @property
     def _llm_type(self) -> str:
@@ -45,7 +46,7 @@ class CustomChatOllama(BaseChatModel):
                 "text": prompt,
                 "model": self.model,
                 "temperature": self.temperature,
-                "max_tokens": kwargs.get("max_tokens", 2048)
+                "num_predict": kwargs.get("num_predict", 2048)
             },
             stream=True
         )
@@ -77,7 +78,7 @@ class CustomChatOllama(BaseChatModel):
                 "text": prompt,
                 "model": self.model,
                 "temperature": self.temperature,
-                "max_tokens": kwargs.get("max_tokens", 2048)
+                "num_predict": kwargs.get("num_predict", 2048)
             },
             stream=True
         )
@@ -107,7 +108,7 @@ class CustomChatOllama(BaseChatModel):
                     "text": prompt,
                     "model": self.model,
                     "temperature": self.temperature,
-                    "max_tokens": kwargs.get("max_tokens", 2048)
+                    "num_predict": kwargs.get("num_predict", 2048)
                 }
             ) as response:
                 full_response = await response.text()
@@ -134,7 +135,7 @@ class CustomChatOllama(BaseChatModel):
                         "text": prompt,
                         "model": self.model,
                         "temperature": self.temperature,
-                        "max_tokens": kwargs.get("max_tokens", 2048)
+                        "num_predict": kwargs.get("num_predict", 2048)
                     }
                 )
                 for prompt in prompts
