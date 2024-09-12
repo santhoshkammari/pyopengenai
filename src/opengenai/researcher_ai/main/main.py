@@ -62,6 +62,7 @@ class MultiAgentQueryOrchestrator:
         subqueries_str = decompose_prompt.run(websearchquery=query,
                                               num_queries=num_queries,
                                               return_type=list)
+        subqueries_str = subqueries_str.replace("'", '"')
         subqueries = json.loads(subqueries_str)
         self.save_to_results("subqueries.json", subqueries)
         return subqueries
