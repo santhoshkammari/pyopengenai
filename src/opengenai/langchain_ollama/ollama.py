@@ -10,8 +10,8 @@ import json
 import asyncio
 
 class CustomChatOllama(BaseChatModel):
-    model: str
-    base_url: str
+    model: str = "qwen2:7b-instruct"
+    base_url: str = "http://192.168.162.49:8888"
     temperature: float = 0.0
     num_predict=-1
 
