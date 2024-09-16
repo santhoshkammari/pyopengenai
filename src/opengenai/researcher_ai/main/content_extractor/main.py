@@ -2,7 +2,7 @@ from ..semantic_chunker import SemanticSimilarityTextChunker
 
 
 class ContextExtractor:
-    def __init__(self, top_chunks_in_article, sentence_chunk_size_in_article, max_subquery_relevant_chunks):
+    def __init__(self, top_chunks_in_article=3, sentence_chunk_size_in_article=3, max_subquery_relevant_chunks=3):
         self.top_chunks_in_article = top_chunks_in_article
         self.sentence_chunk_size_in_article = sentence_chunk_size_in_article
         self.max_subquery_relevant_chunks = max_subquery_relevant_chunks
