@@ -4,7 +4,7 @@ import aiohttp
 from io import BytesIO
 import PyPDF2
 
-from opengenai.web_search import FastHTMLParserV3
+from ....web_search import FastHTMLParserV3
 
 from .base import BaseHtmlParser
 
