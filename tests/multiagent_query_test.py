@@ -1,6 +1,6 @@
 import json
 
-from opengenai.researcher_ai import MultiAgentQueryOrchestrator
+from pyopengenai import MultiAgentQueryOrchestrator, RealTimeGoogleSearchProvider
 
 if __name__ == '__main__':
     processor = MultiAgentQueryOrchestrator(

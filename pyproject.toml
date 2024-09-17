@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyopengenai"
-version = "0.1.2"
+version = "0.1.5"
 description = "A powerful web content fetcher and processor"
 authors = [{name = "Your Name", email = "your.email@example.com"}]
 license = {file = "LICENSE"}

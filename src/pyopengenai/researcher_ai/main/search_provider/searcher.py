@@ -16,7 +16,7 @@ class GoogleSearch(Searcher):
 
 import asyncio
 from typing import List
-from opengenai.web_search import OptimizedMultiQuerySearcher
+from ....web_search import OptimizedMultiQuerySearcher
 
 class RealTimeGoogleSearchProvider(Searcher):
     def __init__(self, search_provider="google"):
