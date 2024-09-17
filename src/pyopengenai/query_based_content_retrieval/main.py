@@ -20,7 +20,7 @@ def tokenize_text(text, chunk_size=100, chunk_overlap=20):
     )
     return text_splitter.split_text(text)
 
-def query_based_content_retrieval(query, topk=10):
+def query_based_content_retrieval(query, topk=10,return_urls = False):
     parser = UrlTextParser()
     searcher = RealTimeGoogleSearchProvider()
     urls = searcher.perform_search(query)
@@ -30,4 +30,7 @@ def query_based_content_retrieval(query, topk=10):
     for x in contents:
         splits.extend(tokenize_text(x))
     splitter = WordLlama.load()
-    return splitter.topk(query, splits, topk)
+    tokens =  splitter.topk(query, splits, topk)
+    if return_urls:
+        return tokens,urls
+    return tokens
