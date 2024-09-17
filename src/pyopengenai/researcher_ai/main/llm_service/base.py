@@ -1,5 +1,5 @@
 from langchain_ollama import ChatOllama
-from opengenai.langchain_ollama import CustomChatOllama
+from ....custom_ollama import CustomChatOllama
 
 database = {
     "list_prompt":"\n\nalways return python list directly, i will directly use your response to Json.parse() expecting List example like ['first','second'...]"

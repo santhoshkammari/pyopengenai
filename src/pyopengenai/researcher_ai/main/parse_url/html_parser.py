@@ -19,6 +19,7 @@ class UrlTextParser(BaseHtmlParser):
         html_urls = []
         pdf_urls = []
         for url in urls:
+            url = self._arxiv_url_fix(url)
             if '/pdf' in url or url.lower().endswith('.pdf'):
                 pdf_urls.append(url)
             else:
@@ -55,5 +56,11 @@ class UrlTextParser(BaseHtmlParser):
             tasks = [fetch_pdf(session, url) for url in pdf_urls]
             results = await asyncio.gather(*tasks)
             return results
+
+    def _arxiv_url_fix(self, url):
+        if 'https://arxiv.org/abs/' in url:
+            return url.replace('https://arxiv.org/abs/', 'https://arxiv.org/pdf/')
+        else:
+            return url
 
 
