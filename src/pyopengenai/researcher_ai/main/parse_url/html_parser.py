@@ -60,6 +60,8 @@ class UrlTextParser(BaseHtmlParser):
     def _arxiv_url_fix(self, url):
         if 'https://arxiv.org/abs/' in url:
             return url.replace('https://arxiv.org/abs/', 'https://arxiv.org/pdf/')
+        elif 'http://arxiv.org/html/' in url:
+            return url.replace('http://arxiv.org/html/', 'https://arxiv.org/pdf/')
         else:
             return url
 
