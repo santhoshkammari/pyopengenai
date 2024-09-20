@@ -10,27 +10,27 @@ import json
 import asyncio
 
 class CustomChatOllama(BaseChatModel):
-    model: str = "qwen2:7b-instruct"
+    model: str = "qwen2.5:7b-instruct"
     base_url: str = "http://192.168.162.49:8888"
     temperature: float = 0.0
-    num_predict=-1
+    num_predict=8000
 
     @property
     def _llm_type(self) -> str:
         return "custom-ollama-chat"
 
-    def _convert_messages_to_prompt(self, messages: List[BaseMessage]) -> str:
-        prompt = ""
+    def _convert_messages_to_prompt(self, messages: List[BaseMessage]) -> List[Dict[str, str]]:
+        updated_messages = []
         for message in messages:
             if isinstance(message, SystemMessage):
-                prompt += f"System: {message.content}\n"
+                updated_messages.append({"role": "system", "content": message.content})
             elif isinstance(message, HumanMessage):
-                prompt += f"Human: {message.content}\n"
+                updated_messages.append({"role": "user", "content": message.content})
             elif isinstance(message, AIMessage):
-                prompt += f"AI: {message.content}\n"
+                updated_messages.append({"role": "assistant", "content": message.content})
             elif isinstance(message, ChatMessage):
-                prompt += f"{message.role.capitalize()}: {message.content}\n"
-        return prompt.strip()
+                updated_messages.append({"role": message.role.lower(), "content": message.content})
+        return updated_messages
 
     def _generate(
         self,
@@ -39,11 +39,11 @@ class CustomChatOllama(BaseChatModel):
         run_manager: Optional[CallbackManagerForLLMRun] = None,
         **kwargs: Any,
     ) -> ChatResult:
-        prompt = self._convert_messages_to_prompt(messages)
+        updated_messages = self._convert_messages_to_prompt(messages)
         response = requests.post(
             f"{self.base_url}/chat",
             json={
-                "text": prompt,
+                "messages": updated_messages,
                 "model": self.model,
                 "temperature": self.temperature,
                 "num_predict": kwargs.get("num_predict", 2048)
@@ -71,11 +71,11 @@ class CustomChatOllama(BaseChatModel):
         run_manager: Optional[CallbackManagerForLLMRun] = None,
         **kwargs: Any,
     ) -> Union[ChatGenerationChunk, List[ChatGenerationChunk]]:
-        prompt = self._convert_messages_to_prompt(messages)
+        updated_messages = self._convert_messages_to_prompt(messages)
         response = requests.post(
             f"{self.base_url}/chat",
             json={
-                "text": prompt,
+                "messages": updated_messages,
                 "model": self.model,
                 "temperature": self.temperature,
                 "num_predict": kwargs.get("num_predict", 2048)
@@ -100,12 +100,12 @@ class CustomChatOllama(BaseChatModel):
         run_manager: Optional[CallbackManagerForLLMRun] = None,
         **kwargs: Any,
     ) -> ChatResult:
-        prompt = self._convert_messages_to_prompt(messages)
+        updated_messages = self._convert_messages_to_prompt(messages)
         async with aiohttp.ClientSession() as session:
             async with session.post(
                 f"{self.base_url}/chat",
                 json={
-                    "text": prompt,
+                    "messages": updated_messages,
                     "model": self.model,
                     "temperature": self.temperature,
                     "num_predict": kwargs.get("num_predict", 2048)
@@ -126,19 +126,19 @@ class CustomChatOllama(BaseChatModel):
         run_manager: Optional[CallbackManagerForLLMRun] = None,
         **kwargs: Any,
     ) -> List[ChatResult]:
-        prompts = [self._convert_messages_to_prompt(msg) for msg in messages]
+        updated_messages_list = [self._convert_messages_to_prompt(msg) for msg in messages]
         async with aiohttp.ClientSession() as session:
             tasks = [
                 session.post(
                     f"{self.base_url}/chat",
                     json={
-                        "text": prompt,
+                        "messages": updated_messages,
                         "model": self.model,
                         "temperature": self.temperature,
                         "num_predict": kwargs.get("num_predict", 2048)
                     }
                 )
-                for prompt in prompts
+                for updated_messages in updated_messages_list
             ]
             responses = await asyncio.gather(*tasks)
             results = []

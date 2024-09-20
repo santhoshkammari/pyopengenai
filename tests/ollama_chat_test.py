@@ -1,5 +1,10 @@
+from src.pyopengenai import CustomChatOllama
 
-from pyopengenai import CustomChatOllama
-llm = CustomChatOllama(model="qwen2:0.5b", base_url="http://192.168.162.49:8888")
-print(llm.invoke("who are you?").content)
+llm = CustomChatOllama()
 
+messages = [
+    {"role":"system","content":"You are Ai Assistant"},
+    {"role":"user","content":"what is capital of france?"}
+]
+
+print(llm.invoke(messages).content)
