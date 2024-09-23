@@ -193,7 +193,7 @@ class TwitterScraper:
         self.cleanup()
 
 def get_tweets(num_tweets=5):
-    with TwitterScraper(headless=False) as scraper:
+    with TwitterScraper() as scraper:
         scraper.login_to_twitter("skarandom","SK99@pass")
         return [x.text for x in scraper.get_home_page_content(num_tweets).tweets]
 
