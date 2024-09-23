@@ -21,6 +21,7 @@ class SearchResult(BaseModel):
     title_and_links: list = []
     urls: list = []
     search_provider: str  = ""
+    page_source:str = ""
 
 class OptimizedMultiQuerySearcher:
     def __init__(self, chromedriver_path="/usr/local/bin/chromedriver", max_workers=None,
@@ -87,7 +88,8 @@ class OptimizedMultiQuerySearcher:
                 query=query,
                 title_and_links=search_results,
                 urls=urls,
-                search_provider = search_provider
+                search_provider = search_provider,
+                page_source = driver.page_source
             )
         except Exception as e:
             logger.error(f"An error occurred while searching '{query}': {str(e)}")
@@ -118,9 +120,9 @@ class OptimizedMultiQuerySearcher:
                 return filtered_urls
             return result
 
-    def __del__(self):
-        for driver in self.driver_pool:
-            driver.quit()
+    # def __del__(self):
+    #     for driver in self.driver_pool:
+    #         driver.quit()
 
     def javascript_based(self, driver=None, search_provider=None, num_results=None):
         script = """
