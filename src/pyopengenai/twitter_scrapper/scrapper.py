@@ -82,7 +82,9 @@ class TwitterScraper:
         for _ in range(num_tweets):
             page_content += self.driver.page_source
             self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-            time.sleep(2)
+            WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, "//article[@data-testid='tweet']"))
+            )
         with open("home_page_tweets.txt","w") as f:
             f.write(f'{page_content}')
 
@@ -116,7 +118,7 @@ class TwitterScraper:
         if not self.driver:
             raise Exception("You must login first using login_to_twitter method")
 
-        self.driver.get(f"https://twitter.com/{username}")
+        self.driver.get(f"https://x.com/{username}")
 
 
 
@@ -132,7 +134,9 @@ class TwitterScraper:
         for _ in range(num_tweets):
             page_content += self.driver.page_source
             self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-            time.sleep(2)
+            WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, "//article[@data-testid='tweet']"))
+            )
 
         tweets = self.get_tweets_from_text(username = username,
                                   text = page_content)
@@ -189,19 +193,10 @@ class TwitterScraper:
         self.cleanup()
 
 def get_tweets(num_tweets=5):
-    with TwitterScraper() as scraper:
+    with TwitterScraper(headless=False) as scraper:
         scraper.login_to_twitter("skarandom","SK99@pass")
         return [x.text for x in scraper.get_home_page_content(num_tweets).tweets]
 
 # Usage example
 if __name__ == "__main__":
-    with TwitterScraper(headless=False) as scraper:
-        scraper.login_to_twitter("skarandom", "SK99@pass")
-        # Get home page content
-        howe_tweets = scraper.get_home_page_content(num_tweets=10)
-        # Get tweets from a specific user
-        # user_tweets = scraper.get_user_tweets("novasarc01", 2)
-        # print(f"\nLatest tweets from @novasarc01:")
-        for tweet in howe_tweets.tweets:
-            print(f"Tweet: {tweet.text}")
-            print(f"Timestamp: {tweet.timestamp}\n")
+    print(get_tweets(2))
