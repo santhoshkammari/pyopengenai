@@ -188,6 +188,10 @@ class TwitterScraper:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.cleanup()
 
+def get_tweets(num_tweets=5):
+    with TwitterScraper() as scraper:
+        scraper.login_to_twitter("skarandom","SK99@pass")
+        return [x.text for x in scraper.get_home_page_content(num_tweets).tweets]
 
 # Usage example
 if __name__ == "__main__":

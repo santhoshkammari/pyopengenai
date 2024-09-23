@@ -32,6 +32,8 @@ src/pyopengenai/researcher_ai/main/search_provider/base.py
 src/pyopengenai/researcher_ai/main/search_provider/searcher.py
 src/pyopengenai/researcher_ai/tests/__init__.py
 src/pyopengenai/researcher_ai/tests/url_test.py
+src/pyopengenai/twitter_scrapper/__init__.py
+src/pyopengenai/twitter_scrapper/scrapper.py
 src/pyopengenai/web_search/__init__.py
 src/pyopengenai/web_search/agent.py
 src/pyopengenai/web_search/embed_search.py
