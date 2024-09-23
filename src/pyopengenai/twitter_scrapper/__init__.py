@@ -1,1 +1,1 @@
-from .scrapper import TwitterScraper
+from .scrapper import TwitterScraper, get_tweets
