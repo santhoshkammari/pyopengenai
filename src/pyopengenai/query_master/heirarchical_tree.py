@@ -178,17 +178,17 @@ class HierarchicalSentenceTree:
 # Example usage:
 if __name__ == "__main__":
     # Load sentences
-    chunks = Path("results.txt").read_text()
-
+    text = Path("/home/ntlpt59/Downloads/combined_text.txt").read_text()
+    print(len(text))
     # Create and build the tree
-    tree = HierarchicalSentenceTree(text_or_chunks=chunks)
+    tree = HierarchicalSentenceTree(text_or_chunks=text)
 
     # Visualize the tree
-    tree.visualize_tree()
+    # tree.visualize_tree()
 
     # Query the tree
     query = "how to call other functions using ollama?"
-    top_k_results = tree.topk_optimal(query)
+    top_k_results = tree.top_k(query,5)
     for x in top_k_results:
         print(x)
         print('#'*50)
