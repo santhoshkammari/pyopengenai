@@ -5,6 +5,7 @@ chunk_overlap = 20,
 chunk_size = 200,
 max_urls = 5
 )
+
 results = retriever.query_based_content_retrieval(
     "example of polymorphism in python")
 print(results.urls)
