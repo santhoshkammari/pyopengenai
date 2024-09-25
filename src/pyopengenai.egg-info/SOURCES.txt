@@ -7,6 +7,8 @@ src/pyopengenai.egg-info/PKG-INFO
 src/pyopengenai.egg-info/SOURCES.txt
 src/pyopengenai.egg-info/dependency_links.txt
 src/pyopengenai.egg-info/top_level.txt
+src/pyopengenai/ai_searcher/__init__.py
+src/pyopengenai/ai_searcher/ai_simple_searcher.py
 src/pyopengenai/custom_ollama/__init__.py
 src/pyopengenai/custom_ollama/custom_ollama.py
 src/pyopengenai/custom_ollama/server.py
