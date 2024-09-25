@@ -4,7 +4,7 @@ from langchain_core.output_parsers import JsonOutputParser
 
 class SearchQueryToNSubquery:
     @classmethod
-    def ai_splits(llm: BaseChatModel,query: str) -> dict:
+    def ai_splits(self,llm: BaseChatModel,query: str) -> dict:
         messages = [
             {"role": "system",
              "content": "You are expert at understanding user query and generating list of google search queries out of them ,"

@@ -13,6 +13,7 @@ src/pyopengenai/custom_ollama/server.py
 src/pyopengenai/query_master/__init__.py
 src/pyopengenai/query_master/heirarchical_tree.py
 src/pyopengenai/query_master/query_refiner.py
+src/pyopengenai/query_master/search_queries_generator.py
 src/pyopengenai/query_master/search_retriever.py
 src/pyopengenai/query_master/text_splitter.py
 src/pyopengenai/query_master/wordllama_embeds.py
