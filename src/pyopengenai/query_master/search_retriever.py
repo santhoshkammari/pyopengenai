@@ -43,7 +43,7 @@ max_urls = 5):
                                              chunk_overlap=self.chunk_overlap)
         if verbose:
             print(f"len of splits: {len(splits)}")
-        tokens = self.splitter.topk(query, splits, topk)
+        tokens = self.splitter.topk(query, splits, min(topk, len(splits)-1))
         if return_urls:
             return tokens, urls
         return SearchRetrieverResult(
