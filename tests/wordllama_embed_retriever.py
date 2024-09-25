@@ -1,10 +1,11 @@
-import time
-from pathlib import Path
-import numpy as np
-from tqdm import tqdm
+from pyopengenai.query_master import SearchRetriever
 
-# PID: 319437
-from pyopengenai import WordLLamaRetreiver
-txt = Path("/home/ntlpt59/Downloads/combined_text.txt").read_text()
-ht = WordLLamaRetreiver(txt)
-print(ht.top_k("what is negotation credit means?"))
+retriever = SearchRetriever(
+chunk_overlap = 20,
+chunk_size = 200,
+max_urls = 5
+)
+results = retriever.query_based_content_retrieval(
+    "example of polymorphism in python")
+print(results.urls)
+print("\n".join(results.topk_chunks))
