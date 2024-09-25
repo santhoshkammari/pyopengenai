@@ -14,9 +14,9 @@ class SearchRetrieverResult(BaseModel):
 
 
 class SearchRetriever:
-    def __init__(self,chunk_overlap = 20,
-chunk_size = 100,
-max_urls = 3):
+    def __init__(self,chunk_overlap = 25,
+chunk_size = 250,
+max_urls = 5):
         self.chunk_overlap = chunk_overlap
         self.chunk_size = chunk_size
         self.max_urls = max_urls
