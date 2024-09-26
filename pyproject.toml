@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyopengenai"
-version = "0.2.1"
+version = "0.2.5"
 description = "A powerful web content fetcher and processor"
 authors = [{name = "Your Name", email = "your.email@example.com"}]
 license = {file = "LICENSE"}
@@ -14,6 +14,32 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
+]
+dependencies = [
+    "langchain_ollama",
+    "aiohttp",
+    "selenium==3.141.0",
+    "webdriver_manager",
+    "beautifulsoup4",
+    "requests",
+    "langchain_text_splitters",
+    "wordllama",
+    "fastembed",
+    "langchain",
+    "scikit-learn",
+    "trafilatura",
+    "nltk",
+    "transformers",
+    "sumy",
+    "nodriver",
+    "weasyprint",
+    "markdown",
+    "pypdf==4.2.0",
+    "torch",
+    "urllib3==1.26.19",
+    "tiktoken"
+
+    # Add any other dependencies your package needs
 ]
 
 [project.urls]

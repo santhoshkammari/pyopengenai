@@ -6,6 +6,8 @@ import urllib.request
 import zipfile
 import shutil
 
+import nltk
+
 
 def is_windows():
     return platform.system().lower() == "windows"
@@ -47,8 +49,17 @@ def install_chrome():
         subprocess.run(["sudo", "apt-get", "install", "-f", "-y"], check=True)
         os.remove(chrome_file)
 
+def setup_nltk():
+    try:
+        nltk.data.find('tokenizers/punkt')
+        nltk.data.find('corpora/stopwords')
+    except LookupError:
+        print("Downloading necessary NLTK data...")
+        nltk.download('punkt')
+        nltk.download('stopwords')
 
 def setup_local():
+    setup_nltk()
     if not is_chrome_installed():
         print("Google Chrome is not installed. Installing...")
         install_chrome()

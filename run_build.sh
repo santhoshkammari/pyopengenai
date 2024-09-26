@@ -7,6 +7,6 @@ python -m build
 pip uninstall -y pyopengenai
 
 # Install the newly built package
-pip install dist/pyopengenai-0.2.1-py3-none-any.whl
+pip install dist/pyopengenai-0.2.5-py3-none-any.whl
 
 echo "Build and installation completed."

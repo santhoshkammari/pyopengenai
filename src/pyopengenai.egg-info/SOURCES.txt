@@ -3,10 +3,12 @@ README.md
 pyproject.toml
 setup.cfg
 src/pyopengenai/__init__.py
+src/pyopengenai/sample_run.py
 src/pyopengenai/setup_local.py
 src/pyopengenai.egg-info/PKG-INFO
 src/pyopengenai.egg-info/SOURCES.txt
 src/pyopengenai.egg-info/dependency_links.txt
+src/pyopengenai.egg-info/requires.txt
 src/pyopengenai.egg-info/top_level.txt
 src/pyopengenai/ai_searcher/__init__.py
 src/pyopengenai/ai_searcher/ai_simple_searcher.py
