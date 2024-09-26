@@ -7,9 +7,9 @@ class SearchQueryToNSubquery:
     def ai_splits(self,llm: BaseChatModel,query: str) -> dict:
         messages = [
             {"role": "system",
-             "content": "You are expert at understanding user query and generating list of google search queries out of them ,"
+             "content": "You are expert at understanding user query and generating list of google search queries rephrase and rewritten for better search results ,"
                         "that completely solves the given user query."
-                        "Refine and expand the query into a list of sub-queries"
+                        "Refine and expand the query , then generate the variations of the query"
                         "Output JSON format: {\"refined_splits\":[<list_of_better_google_search_queries>]}"},
             {"role": "user", "content": f"Query: {query}"}
         ]

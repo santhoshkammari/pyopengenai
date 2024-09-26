@@ -32,7 +32,7 @@ max_urls = 5):
 
     def query_based_content_retrieval(self, query, topk=10, return_urls=False,
                                       verbose = False):
-        urls = self.searcher.perform_search(query)
+        urls = self.searcher.perform_search(query,max_urls=self.max_urls)
         if verbose:
             print(f"URLs found: {urls}")
         contents = self.parser.parse_html(urls)
@@ -43,7 +43,7 @@ max_urls = 5):
                                              chunk_overlap=self.chunk_overlap)
         if verbose:
             print(f"len of splits: {len(splits)}")
-        tokens = self.splitter.topk(query, splits, min(topk, len(splits)-1))
+        tokens = self.splitter.topk(query, splits, min(topk, len(splits)-1)) if len(splits)>2 else []
         if return_urls:
             return tokens, urls
         return SearchRetrieverResult(
