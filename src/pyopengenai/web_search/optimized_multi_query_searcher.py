@@ -15,17 +15,20 @@ from typing import List
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-
+import time
 class SearchResult(BaseModel):
     query: str
     title_and_links: list = []
     urls: list = []
     search_provider: str  = ""
+    page_source:str = ""
 
 class OptimizedMultiQuerySearcher:
-    def __init__(self, chromedriver_path="/usr/local/bin/chromedriver", max_workers=None):
+    def __init__(self, chromedriver_path="/usr/local/bin/chromedriver", max_workers=None,
+                 animation = False):
         self.chromedriver_path = chromedriver_path
         self.max_workers = max_workers or min(32, cpu_count() -2)
+        self.animation = animation
         self.driver_pool = []
         self.params = {
             "bing":{"search":"b_results","find_element":".b_algo","head_selector":"h2"},
@@ -34,7 +37,8 @@ class OptimizedMultiQuerySearcher:
 
     def _setup_driver(self):
         chrome_options = Options()
-        chrome_options.add_argument("--headless")
+        if not self.animation:
+            chrome_options.add_argument("--headless")
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
@@ -75,45 +79,17 @@ class OptimizedMultiQuerySearcher:
             WebDriverWait(driver, 5).until(
                 EC.presence_of_element_located((By.ID, self.params[search_provider]["search"]))
             )
-            # results = driver.find_elements(By.CSS_SELECTOR, self.params[search_provider]["find_element"])
-
-            # search_results = []
-            # for result in results[:num_results]:
-            #     try:
-            #         title = result.find_element(By.CSS_SELECTOR, "h3").text
-            #         link = result.find_element(By.CSS_SELECTOR, "a").get_attribute("href")
-            #         search_results.append({"title": title, "link": link})
-            #     except Exception as e:
-            #         logger.error(f"Error parsing result: {str(e)}")
-            #         continue
-
-            script = """
-                        var results = [];
-                        var elements = document.querySelectorAll('##find_element##');
-                        for (var i = 0; i < arguments[0] && i < elements.length; i++) {
-                            var element = elements[i];
-                            var titleElement = element.querySelector('##head_selector##');
-                            var linkElement = element.querySelector('a');
-                            if (titleElement && linkElement) {
-                                results.push({
-                                    title: titleElement.innerText,
-                                    link: linkElement.href
-                                });
-                            }
-                        }
-                        return results;
-                        """
-            script = script.replace("##find_element##",self.params[search_provider]["find_element"])
-            script = script.replace("##head_selector##",self.params[search_provider]["head_selector"])
-            search_results = driver.execute_script(script, num_results)
-
-            urls = [x['link'] for x in search_results if len(x['link'])>0]
+            urls,search_results = self.javascript_based(search_provider=search_provider,
+                                          num_results=num_results,
+                                         driver = driver
+                                         )
 
             return SearchResult(
                 query=query,
                 title_and_links=search_results,
                 urls=urls,
-                search_provider = search_provider
+                search_provider = search_provider,
+                page_source = driver.page_source
             )
         except Exception as e:
             logger.error(f"An error occurred while searching '{query}': {str(e)}")
@@ -144,9 +120,33 @@ class OptimizedMultiQuerySearcher:
                 return filtered_urls
             return result
 
-    def __del__(self):
-        for driver in self.driver_pool:
-            driver.quit()
+    # def __del__(self):
+    #     for driver in self.driver_pool:
+    #         driver.quit()
+
+    def javascript_based(self, driver=None, search_provider=None, num_results=None):
+        script = """
+                                var results = [];
+                                var elements = document.querySelectorAll('##find_element##');
+                                for (var i = 0; i < arguments[0] && i < elements.length; i++) {
+                                    var element = elements[i];
+                                    var titleElement = element.querySelector('##head_selector##');
+                                    var linkElement = element.querySelector('a');
+                                    if (titleElement && linkElement) {
+                                        results.push({
+                                            title: titleElement.innerText,
+                                            link: linkElement.href
+                                        });
+                                    }
+                                }
+                                return results;
+                                """
+        script = script.replace("##find_element##", self.params[search_provider]["find_element"])
+        script = script.replace("##head_selector##", self.params[search_provider]["head_selector"])
+        search_results = driver.execute_script(script, num_results)
+        urls = [x['link'] for x in search_results if len(x['link']) > 0]
+        return urls,search_results
+
 
 if __name__ == '__main__':
     import time

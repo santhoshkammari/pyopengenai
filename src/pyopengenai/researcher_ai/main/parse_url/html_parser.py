@@ -3,7 +3,7 @@ from dataclasses import dataclass
 import aiohttp
 from io import BytesIO
 import PyPDF2
-
+from tqdm import tqdm
 from ....web_search import FastHTMLParserV3
 
 from .base import BaseHtmlParser
@@ -18,7 +18,7 @@ class UrlTextParser(BaseHtmlParser):
     async def _async_html_parser(self, urls):
         html_urls = []
         pdf_urls = []
-        for url in urls:
+        for url in tqdm(urls,desc = "processing urls",unit = 'url'):
             url = self._arxiv_url_fix(url)
             if '/pdf' in url or url.lower().endswith('.pdf'):
                 pdf_urls.append(url)
@@ -60,6 +60,8 @@ class UrlTextParser(BaseHtmlParser):
     def _arxiv_url_fix(self, url):
         if 'https://arxiv.org/abs/' in url:
             return url.replace('https://arxiv.org/abs/', 'https://arxiv.org/pdf/')
+        elif 'http://arxiv.org/html/' in url:
+            return url.replace('http://arxiv.org/html/', 'https://arxiv.org/pdf/')
         else:
             return url
 
