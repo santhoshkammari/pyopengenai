@@ -3,6 +3,7 @@ README.md
 pyproject.toml
 setup.cfg
 src/pyopengenai/__init__.py
+src/pyopengenai/setup_local.py
 src/pyopengenai.egg-info/PKG-INFO
 src/pyopengenai.egg-info/SOURCES.txt
 src/pyopengenai.egg-info/dependency_links.txt
