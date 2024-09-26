@@ -6,3 +6,4 @@ from .custom_ollama import CustomChatOllama
 from .query_master.wordllama_embeds import WordLLamaRetriever
 from .query_master.search_queries_generator import SearchQueryToNSubquery
 from .query_master.query_refiner import QueryRefiner
+from .setup_local import setup_local
