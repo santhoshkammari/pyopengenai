@@ -9,7 +9,8 @@ class TextProcessor:
         text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
             chunk_size=chunk_size,
             chunk_overlap=chunk_overlap,
-            separators=["\n\n", "\n", ".", "!", "?", " ", ""]
+            separators=["\n\n", "\n", ".", "!", "?", " ", ""],
+            disallowed_special=()
         )
         return text_splitter.split_text(text)
 
