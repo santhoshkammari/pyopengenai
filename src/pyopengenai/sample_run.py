@@ -38,9 +38,18 @@ def fast_search(query,verbose: bool|str = False,
     return res
 
 def google_search(query,verbose: bool|str = False):
-    retriever = SearchRetriever()
+    retriever = SearchRetriever(
+        chunk_overlap=20,
+        chunk_size=100,
+        max_urls=2,
+    )
     if isinstance(verbose,str): verbose = verbose.lower() == 'true'
     results = retriever.query_based_content_retrieval(query, topk=5,verbose=verbose)
     return "\n".join(results.topk_chunks)
 
+def deep_google_search(query,verbose: bool|str = False):
+    retriever = SearchRetriever()
+    if isinstance(verbose,str): verbose = verbose.lower() == 'true'
+    results = retriever.query_based_content_retrieval(query, topk=5,verbose=verbose)
+    return "\n".join(results.topk_chunks)
 
