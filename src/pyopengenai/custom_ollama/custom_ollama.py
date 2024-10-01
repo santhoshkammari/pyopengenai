@@ -150,3 +150,8 @@ class CustomChatOllama(BaseChatModel):
                 )
                 results.append(ChatResult(generations=[chat_generation]))
         return results
+
+    def pstream(self,messages):
+        for x in self.stream(messages):
+            print(x.content,end = "", flush=True)
+
