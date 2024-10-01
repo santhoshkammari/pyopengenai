@@ -8,7 +8,7 @@ from langchain.schema import HumanMessage
 app = FastAPI()
 
 class ChatInput(BaseModel):
-    text: str
+    messages: List | str
     model: str
     temperature: float
     num_predict: int
@@ -38,9 +38,9 @@ async def get_chat_model(model: str, temp: float, num_predict: int):
 
     return current_model
 
-async def chat_stream(text: str, model: str, temp: float, num_predict: int):
+async def chat_stream(messages: List, model: str, temp: float, num_predict: int):
     chat_model = await get_chat_model(model, temp, num_predict)
-    async for chunk in chat_model.astream([HumanMessage(content=text)]):
+    async for chunk in chat_model.astream(messages):
         yield chunk.content
 
 async def process_batch(messages: List[str], model: str, temp: float):
@@ -51,7 +51,7 @@ async def process_batch(messages: List[str], model: str, temp: float):
 
 @app.post("/chat")
 async def chat_endpoint(chat_input: ChatInput):
-    return StreamingResponse(chat_stream(chat_input.text, chat_input.model, chat_input.temperature, chat_input.num_predict), media_type="text/event-stream")
+    return StreamingResponse(chat_stream(chat_input.messages, chat_input.model, chat_input.temperature, chat_input.num_predict), media_type="text/event-stream")
 
 @app.post("/batch-chat")
 async def batch_chat_endpoint(batch_input: BatchChatInput):

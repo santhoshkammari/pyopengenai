@@ -16,7 +16,7 @@ class AdvancedAISearcher:
         self.chunk_size = chunk_size
         self.max_urls = max_urls
 
-    def search(self, llm: BaseChatModel, query: str,
+    def generic_search(self, llm: BaseChatModel, query: str,
                verbose:bool = False,
                return_content_list = False)-> str:
         refined_query = QueryRefiner.refine_query(llm=llm, query=query)
@@ -42,6 +42,37 @@ class AdvancedAISearcher:
             return ans,all_urls
         ans = "\n".join(ans)
         final_ans = f"Answer:\n{ans}\n\nURLs:\n{join_urls}"
+        return final_ans
+
+    def search(self, llm: BaseChatModel, query: str,
+               verbose:bool = False)-> str:
+        refined_query = QueryRefiner.refine_query(llm=llm, query=query)
+        if verbose:
+            print(f"Refined Query: {refined_query}")
+
+        query_splits = SearchQueryToNSubquery.ai_splits(llm=llm, query=refined_query)
+        if verbose:
+            print(f"Query Splits: {query_splits}")
+        retriever = SearchRetriever(
+            chunk_overlap=self.chunk_overlap,
+            chunk_size=self.chunk_size,
+            max_urls=self.max_urls,
+        )
+        ans = []
+        all_urls = []
+        for chunk in query_splits.get("refined_splits", []):
+            results = retriever.query_based_content_retrieval(chunk,verbose=verbose)
+            ans.extend(results.topk_chunks)
+            all_urls.extend(results.urls)
+        join_urls = "\n".join(all_urls)
+
+        all_sentences = []
+        for i, answer in enumerate(ans):
+            all_sentences.extend(self.__preprocess_text(answer, i))
+        key_sentences = self.__extract_key_sentences(all_sentences, n=self.n_key_sentences)
+
+        context = "\n".join(list(set([i[1] for i in key_sentences])))
+        final_ans = f"Answer:\n{context}\n\nURLs:\n{join_urls}"
         return final_ans
 
     def __preprocess_text(self,text, i):
@@ -75,7 +106,7 @@ class AdvancedAISearcher:
 
     def generate_final_answer(self,llm, query,verbose = False):
         # Preprocess and extract key information
-        answers, urls = self.search(llm, query, return_content_list=True,
+        answers, urls = self.generic_search(llm, query, return_content_list=True,
                                    verbose=verbose)
         all_sentences = []
         for i, answer in enumerate(answers):

@@ -13,7 +13,7 @@ class CustomChatOllama(BaseChatModel):
     model: str = "qwen2.5:7b-instruct"
     base_url: str = "http://192.168.162.49:8888"
     temperature: float = 0.0
-    num_predict=8000
+    num_predict:int =8000
 
     @property
     def _llm_type(self) -> str:
@@ -150,3 +150,8 @@ class CustomChatOllama(BaseChatModel):
                 )
                 results.append(ChatResult(generations=[chat_generation]))
         return results
+
+    def pstream(self,messages):
+        for x in self.stream(messages):
+            print(x.content,end = "", flush=True)
+
