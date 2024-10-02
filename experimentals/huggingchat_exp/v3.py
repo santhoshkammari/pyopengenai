@@ -68,16 +68,13 @@ def scroll_and_get_response():
         # Capture current view
         screenshot = pyautogui.screenshot(region=chat_area)
         current_text = pytesseract.image_to_string(screenshot)
-
-        print(f"Current text :\n {current_text}\n")
-        print("--------------------------------")
-
+        # screenshot.save(f'image_{scroll_attempts}.png')
         # Append new text to full_text
         full_text += current_text.replace(last_text, "")
 
         # Scroll down
-        pyautogui.scroll(-100)  # Negative value to scroll down
-        time.sleep(1)  # Wait for scroll to complete
+        pyautogui.scroll(-4)  # Negative value to scroll down
+        # time.sleep(1)  # Wait for scroll to complete
 
         # Check if we've reached the end (no new text)
         if current_text == last_text:
@@ -89,15 +86,25 @@ def scroll_and_get_response():
     logger.info("Finished capturing response.")
     return full_text
 
+
+def get_response():
+    pyautogui.hotkey('ctrl', 'U')
+    time.sleep(5)
+
+
+
+
 def open_huggingchat_and_request_joke():
+    text = ""
     try:
         open_huggingchat()
-        perform_search("give me python code to load wikpeda data and use some numpy operation .")
-        scroll_and_get_response()
+        perform_search("give me python code to run numpy aray to load dataset using transformers")
+        text = scroll_and_get_response()
         close_huggingfacechat()
     except Exception as e:
         logger.error(f"An error occurred: {str(e)}")
+    return text
 
 if __name__ == "__main__":
     logger.info("Starting.. Please don't move the mouse or use the keyboard.")
-    open_huggingchat_and_request_joke()
+    print(open_huggingchat_and_request_joke())
