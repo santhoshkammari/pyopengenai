@@ -303,21 +303,8 @@ class SpotlightLLM(QWidget):
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
-            self.save_session()
             self.close()
-
-    def save_session(self):
-        if self.session_interactions:
-            session_timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = f"session_{session_timestamp}.json"
-            filepath = os.path.join(self.data_dir, filename)
-
-            with open(filepath, 'w') as f:
-                json.dump(self.session_interactions, f, indent=2)
-            logging.info(f"Session saved: {filepath}")
-
     def closeEvent(self, event):
-        self.save_session()
         logging.info("Application closing")
         super().closeEvent(event)
 
@@ -328,5 +315,4 @@ def spotlight_llm_run(email,password):
     sys.exit(app.exec_())
 
 if __name__ == '__main__':
-    spotlight_llm_run(email="santhoshkammari1999@gmail.com",
-                      password="SK99@pass123")
+    spotlight_llm_run(email="santhoshkammari1999@gmail.com",password="SK99@pass123")
