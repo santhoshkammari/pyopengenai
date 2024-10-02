@@ -257,7 +257,6 @@ class SpotlightLLM(QWidget):
             if prompt.lower().split()[-1] in ["google", "bing"]:
                 prompt = self.filter_prompts(prompt)
                 web_search_flag = True
-            print(f"Question: {prompt}")
             for resp in self.chatbot.chat(
                     prompt,
                     stream=True,
