@@ -49,15 +49,51 @@ def perform_search(query):
 
 
 def scroll_and_get_response():
-    text = "hurray!"
-    return text
+    logger.info("Scrolling to capture the entire response...")
+    screen_width, screen_height = pyautogui.size()
+    chat_area = (int(screen_width * 0.25), 0, int(screen_width * 0.75), screen_height)
+
+    # Scroll to top
+    logger.info("Scrolling to the top...")
+    pyautogui.moveTo(screen_width // 2, screen_height // 2)
+    pyautogui.scroll(1000)  # Large positive value to scroll up
+    time.sleep(1)  # Wait for scroll to complete
+
+    full_text = ""
+    last_text = ""
+    scroll_attempts = 0
+    max_scroll_attempts = 20  # Adjust this value based on expected response length
+
+    while scroll_attempts < max_scroll_attempts:
+        # Capture current view
+        screenshot = pyautogui.screenshot(region=chat_area)
+        current_text = pytesseract.image_to_string(screenshot)
+
+        print(f"Current text :\n {current_text}\n")
+        print("--------------------------------")
+
+        # Append new text to full_text
+        full_text += current_text.replace(last_text, "")
+
+        # Scroll down
+        pyautogui.scroll(-100)  # Negative value to scroll down
+        time.sleep(1)  # Wait for scroll to complete
+
+        # Check if we've reached the end (no new text)
+        if current_text == last_text:
+            break
+
+        last_text = current_text
+        scroll_attempts += 1
+
+    logger.info("Finished capturing response.")
+    return full_text
 
 def open_huggingchat_and_request_joke():
     try:
         open_huggingchat()
-        perform_search("tell me about narendra modi in very shor paragraph")
-        text = scroll_and_get_response()
-        print(text)
+        perform_search("give me python code to load wikpeda data and use some numpy operation .")
+        scroll_and_get_response()
         close_huggingfacechat()
     except Exception as e:
         logger.error(f"An error occurred: {str(e)}")
@@ -65,4 +101,3 @@ def open_huggingchat_and_request_joke():
 if __name__ == "__main__":
     logger.info("Starting.. Please don't move the mouse or use the keyboard.")
     open_huggingchat_and_request_joke()
-
