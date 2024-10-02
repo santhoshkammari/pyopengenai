@@ -6,7 +6,7 @@ import os
 
 from langchain_core.messages import SystemMessage, HumanMessage
 
-from prompts import PROMPTS
+from .prompts import PROMPTS
 from hugchat import hugchat
 from hugchat.login import Login
 
@@ -49,8 +49,10 @@ class StreamHandler(QObject):
 
 
 class SpotlightLLM(QWidget):
-    def __init__(self, models: list | str = None, execution_mode="Local"):
+    def __init__(self, email,password,models: list | str = None, execution_mode="Local"):
         super().__init__()
+        self.email = email
+        self.password = password  # NOTE: This should be kept securely. Use environment variables or secure vaults.
         self.models = models or DEFAULT_MODELS
         self.execution_mode = execution_mode  # Default to Local execution
         self.current_model = self.models[0]
@@ -65,10 +67,8 @@ class SpotlightLLM(QWidget):
                             format='%(asctime)s - %(levelname)s - %(message)s')
 
     def initialize_chat(self):
-        EMAIL = "santhoshkammari1999@gmail.com"
-        PASSWD = "SK99@pass123"
         cookie_path_dir = "./cookies/"  # NOTE: trailing slash (/) is required to avoid errors
-        sign = Login(EMAIL, PASSWD)
+        sign = Login(self.email, self.password)
         cookies = sign.login(cookie_dir_path=cookie_path_dir, save_cookies=True)
         qwen_model = self.models[0] if isinstance(self.models, list) else self.models
         chatbot = hugchat.ChatBot(cookies=cookies.get_dict(),
@@ -321,9 +321,12 @@ class SpotlightLLM(QWidget):
         logging.info("Application closing")
         super().closeEvent(event)
 
-
-if __name__ == '__main__':
+def spotlight_llm_run(email,password):
     app = QApplication(sys.argv)
-    ex = SpotlightLLM()
+    ex = SpotlightLLM(email=email,password=password)
     ex.show()
     sys.exit(app.exec_())
+
+if __name__ == '__main__':
+    spotlight_llm_run(email="santhoshkammari1999@gmail.com",
+                      password="SK99@pass123")

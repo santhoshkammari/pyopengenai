@@ -13,6 +13,7 @@ src/pyopengenai.egg-info/top_level.txt
 src/pyopengenai/ai_searcher/__init__.py
 src/pyopengenai/ai_searcher/ai_simple_searcher.py
 src/pyopengenai/custom_ollama/__init__.py
+src/pyopengenai/custom_ollama/configured_models.py
 src/pyopengenai/custom_ollama/custom_ollama.py
 src/pyopengenai/custom_ollama/server.py
 src/pyopengenai/query_master/__init__.py
@@ -40,6 +41,9 @@ src/pyopengenai/researcher_ai/main/search_provider/base.py
 src/pyopengenai/researcher_ai/main/search_provider/searcher.py
 src/pyopengenai/researcher_ai/tests/__init__.py
 src/pyopengenai/researcher_ai/tests/url_test.py
+src/pyopengenai/spotlight_llm/__init__.py
+src/pyopengenai/spotlight_llm/prompts.py
+src/pyopengenai/spotlight_llm/spotlight_llm.py
 src/pyopengenai/twitter_scrapper/__init__.py
 src/pyopengenai/twitter_scrapper/scrapper.py
 src/pyopengenai/web_search/__init__.py
