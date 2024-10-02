@@ -1,10 +1,8 @@
-from pathlib import Path
 
 import pyautogui
 import time
 import logging
 import pytesseract
-from PIL import Image
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -45,19 +43,26 @@ def write_and_hit_enter(query):
     pyautogui.press('enter')
 
 
-def get_chat_request(query):
+def perform_search(query):
     write_and_hit_enter(query)
     wait_till_response_completed()
+
+
+def scroll_and_get_response():
+    text = "hurray!"
+    return text
 
 def open_huggingchat_and_request_joke():
     try:
         open_huggingchat()
-        get_chat_request("tell me about narendra modi in very shor paragraph")
+        perform_search("tell me about narendra modi in very shor paragraph")
+        text = scroll_and_get_response()
+        print(text)
         close_huggingfacechat()
     except Exception as e:
         logger.error(f"An error occurred: {str(e)}")
 
 if __name__ == "__main__":
-    # Add a small delay before starting to ensure the script doesn't interfere with any current user actions
-    logger.info("Starting in 3 seconds. Please don't move the mouse or use the keyboard.")
+    logger.info("Starting.. Please don't move the mouse or use the keyboard.")
     open_huggingchat_and_request_joke()
+
