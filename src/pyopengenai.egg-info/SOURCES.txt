@@ -16,6 +16,8 @@ src/pyopengenai/custom_ollama/__init__.py
 src/pyopengenai/custom_ollama/configured_models.py
 src/pyopengenai/custom_ollama/custom_ollama.py
 src/pyopengenai/custom_ollama/server.py
+src/pyopengenai/pdf_retreiver/__init__.py
+src/pyopengenai/pdf_retreiver/main.py
 src/pyopengenai/query_master/__init__.py
 src/pyopengenai/query_master/heirarchical_tree.py
 src/pyopengenai/query_master/query_refiner.py
