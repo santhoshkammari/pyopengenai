@@ -15,7 +15,7 @@ Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: langchain_ollama
 Requires-Dist: aiohttp
-Requires-Dist: selenium==3.141.0
+Requires-Dist: selenium==4.25.0
 Requires-Dist: webdriver_manager
 Requires-Dist: beautifulsoup4
 Requires-Dist: requests

@@ -12,6 +12,11 @@ from .base import BaseHtmlParser
 @dataclass
 class UrlTextParser(BaseHtmlParser):
     extract_pdf = True
+    def parse_single_html(self,url:str):
+        res = self.parse_html([url])
+        if res:
+            return res[0]
+        return ""
     def parse_html(self, urls: list) -> list:
         return asyncio.run(self._async_html_parser(urls))
 

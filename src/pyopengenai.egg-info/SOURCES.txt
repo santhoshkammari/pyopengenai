@@ -13,7 +13,6 @@ src/pyopengenai.egg-info/top_level.txt
 src/pyopengenai/ai_searcher/__init__.py
 src/pyopengenai/ai_searcher/ai_simple_searcher.py
 src/pyopengenai/custom_ollama/__init__.py
-src/pyopengenai/custom_ollama/configured_models.py
 src/pyopengenai/custom_ollama/custom_ollama.py
 src/pyopengenai/custom_ollama/server.py
 src/pyopengenai/pdf_retreiver/__init__.py

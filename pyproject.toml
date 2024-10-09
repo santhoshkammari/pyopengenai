@@ -18,7 +18,7 @@ classifiers = [
 dependencies = [
     "langchain_ollama",
     "aiohttp",
-    "selenium==3.141.0",
+    "selenium==4.25.0",
     "webdriver_manager",
     "beautifulsoup4",
     "requests",

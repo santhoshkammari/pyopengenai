@@ -1,4 +1,4 @@
 urllib3==1.26.19
-selenium==3.141.0
+selenium
 weasyprint
 pypdf==4.2.0
