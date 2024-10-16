@@ -11,7 +11,8 @@ from .base import BaseHtmlParser
 
 @dataclass
 class UrlTextParser(BaseHtmlParser):
-    extract_pdf = True
+    def __init__(self,extract_pdf=True):
+        self.extract_pdf = extract_pdf
     def parse_single_html(self,url:str):
         res = self.parse_html([url])
         if res:
@@ -63,10 +64,13 @@ class UrlTextParser(BaseHtmlParser):
             return results
 
     def _arxiv_url_fix(self, url):
-        if 'https://arxiv.org/abs/' in url:
+        if 'https://arxiv.org/abs/' in url and self.extract_pdf:
             return url.replace('https://arxiv.org/abs/', 'https://arxiv.org/pdf/')
         elif 'http://arxiv.org/html/' in url:
-            return url.replace('http://arxiv.org/html/', 'https://arxiv.org/pdf/')
+            if self.extract_pdf:
+                return url.replace('http://arxiv.org/html/', 'https://arxiv.org/pdf/')
+            else:
+                return url.replace('http://arxiv.org/html/', 'https://arxiv.org/abs/')
         else:
             return url
 

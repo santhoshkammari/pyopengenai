@@ -6,11 +6,10 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 class TextProcessor:
     @staticmethod
     def tokenize_text(text, chunk_size=100, chunk_overlap=20):
-        text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
+        text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=chunk_size,
             chunk_overlap=chunk_overlap,
-            separators=["\n\n", "\n", ".", "!", "?", " ", ""],
-            disallowed_special=()
+            separators=["\n\n", "\n", ".", "!", "?", " ", ""]
         )
         return text_splitter.split_text(text)
 

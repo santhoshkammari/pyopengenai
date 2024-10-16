@@ -4,6 +4,7 @@ import re
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -12,7 +13,6 @@ from typing import List, Dict
 import logging
 import time
 
-from testing.impl.events.test_event_processor import timestamp
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -44,7 +44,8 @@ class TwitterScraper:
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--start-maximized")
-        return webdriver.Chrome(self.chromedriver_path, options=chrome_options)
+        service = Service(self.chromedriver_path)
+        return webdriver.Chrome(service=service, options=chrome_options)
 
     def login_to_twitter(self, username, password):
         self.driver = self._setup_driver()
@@ -193,7 +194,7 @@ class TwitterScraper:
         self.cleanup()
 
 def get_tweets(num_tweets=5):
-    with TwitterScraper() as scraper:
+    with TwitterScraper(headless=False) as scraper:
         scraper.login_to_twitter("skarandom","SK99@pass")
         return [x.text for x in scraper.get_home_page_content(num_tweets).tweets]
 

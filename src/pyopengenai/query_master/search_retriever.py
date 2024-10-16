@@ -16,11 +16,12 @@ class SearchRetrieverResult(BaseModel):
 class SearchRetriever:
     def __init__(self,chunk_overlap = 25,
 chunk_size = 250,
-max_urls = 5):
+max_urls = 5,
+                 extract_pdf=True):
         self.chunk_overlap = chunk_overlap
         self.chunk_size = chunk_size
         self.max_urls = max_urls
-        self.parser = UrlTextParser()
+        self.parser = UrlTextParser(extract_pdf=extract_pdf)
         self.searcher = RealTimeGoogleSearchProvider()
         self.splitter = WordLlama.load()
 

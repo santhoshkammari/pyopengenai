@@ -2,6 +2,8 @@ import string
 
 from langchain_core.language_models import BaseChatModel
 from nltk import sent_tokenize, FreqDist
+import nltk
+nltk.download("stopwords")
 from nltk.corpus import stopwords
 
 from ..query_master import SearchQueryToNSubquery,SearchRetriever,QueryRefiner
@@ -10,20 +12,24 @@ class AdvancedAISearcher:
     def __init__(self, chunk_overlap=25,
                  chunk_size=250,
                  max_urls=5,
-                 n_key_sentences = 25):
+                 n_key_sentences = 25,
+                 topk = 10):
         self.n_key_sentences = n_key_sentences
         self.chunk_overlap = chunk_overlap
         self.chunk_size = chunk_size
         self.max_urls = max_urls
+        self.topk = topk
 
     def generic_search(self, llm: BaseChatModel, query: str,
                verbose:bool = False,
-               return_content_list = False)-> str:
+               return_content_list = False,
+                       n_splits = None)-> str:
         refined_query = QueryRefiner.refine_query(llm=llm, query=query)
         if verbose:
             print(f"Refined Query: {refined_query}")
 
-        query_splits = SearchQueryToNSubquery.ai_splits(llm=llm, query=refined_query)
+        query_splits = SearchQueryToNSubquery.ai_splits(llm=llm, query=refined_query,
+                                                        n_splits=n_splits)
         if verbose:
             print(f"Query Splits: {query_splits}")
         retriever = SearchRetriever(
@@ -34,7 +40,7 @@ class AdvancedAISearcher:
         ans = []
         all_urls = []
         for chunk in query_splits.get("refined_splits", []):
-            results = retriever.query_based_content_retrieval(chunk,verbose=verbose)
+            results = retriever.query_based_content_retrieval(chunk,verbose=verbose,topk=self.topk)
             ans.extend(results.topk_chunks)
             all_urls.extend(results.urls)
         join_urls = "\n".join(all_urls)
@@ -104,10 +110,11 @@ class AdvancedAISearcher:
         # Sort sentences by score and return top n
         return [s for s in sorted(sentence_scores, key=lambda x: x[-1], reverse=True)[:n]]
 
-    def generate_final_answer(self,llm, query,verbose = False):
+    def generate_final_answer(self,llm, query,verbose = False,n_splits = None):
         # Preprocess and extract key information
         answers, urls = self.generic_search(llm, query, return_content_list=True,
-                                   verbose=verbose)
+                                   verbose=verbose,
+                                            n_splits = n_splits)
         all_sentences = []
         for i, answer in enumerate(answers):
             all_sentences.extend(self.__preprocess_text(answer, i))
